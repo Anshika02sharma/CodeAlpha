@@ -1,9 +1,39 @@
-import scapy.all as scapy
+from scapy.all import sniff, get_if_list, IP, TCP, UDP, ICMP
 
-def sniffing(interface):
-    scapy.sniff(iface=interface, store=False, prn=process_packet, filter="ip")
+def capture(packet):
+    if IP in packet:
+        src = packet[IP].src
+        dst = packet[IP].dst
+        proto = "Other"
+        sport = dport = None
 
-def process_packet(packet):
-    print(packet.show())
+        if TCP in packet:
+            proto = "TCP"
+            sport = packet[TCP].sport
+            dport = packet[TCP].dport
+        elif UDP in packet:
+            proto = "UDP"
+            sport = packet[UDP].sport
+            dport = packet[UDP].dport
+        elif ICMP in packet:
+            proto = "ICMP"
+        print(f"{proto}: {src}:{sport} -> {dst}:{dport}")
 
-sniffing('Ethernet0')
+def get_interfaces():
+    return get_if_list()
+
+if __name__ == "__main__":
+    interfaces = get_interfaces()
+    print("Select Interface:")
+    for idx, iface in enumerate(interfaces, 1):
+        print(f"{idx}. {iface}")
+    try:
+        choice = int(input()) - 1
+        iface = interfaces[choice]
+    except (ValueError, IndexError):
+        print("Invalid choice.")
+        exit(1)
+
+    filter = input("Enter filter (default 'ip'): ") or "ip"
+    print(f"Sniffing on {iface} with filter: {filter}")
+    sniff(iface=iface, filter=filter, store=0, prn=capture)
