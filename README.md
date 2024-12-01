@@ -49,8 +49,8 @@ TCP: 192.168.1.101:1234 -> 93.184.216.34:80
 ## Contributing
 Feel free to fork this repository, open issues, or submit pull requests for enhancements and bug fixes.
 ## Acknowledgments
--This project utilizes the Scapy library for packet sniffing and manipulation.
--Special thanks to the Python community for providing excellent resources and documentation.
+- This project utilizes the Scapy library for packet sniffing and manipulation.
+- Special thanks to the Python community for providing excellent resources and documentation.
 
 
 
